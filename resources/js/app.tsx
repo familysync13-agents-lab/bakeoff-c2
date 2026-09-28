@@ -6,6 +6,7 @@ import { initializeTheme } from '@/hooks/use-appearance';
 import AppLayout from '@/layouts/app-layout';
 import AuthLayout from '@/layouts/auth-layout';
 import SettingsLayout from '@/layouts/settings/layout';
+import SiteLayout from '@/layouts/site-layout';
 
 initMonitoring();
 
@@ -13,12 +14,13 @@ const appName = import.meta.env.VITE_APP_NAME || 'Shared Reading Lists';
 
 void createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
+    // Every page renders inside the app shell (SiteLayout: header, main, footer).
     layout: (name) => {
         switch (true) {
             case name === 'welcome':
-                return null;
+                return SiteLayout;
             case name.startsWith('auth/'):
-                return AuthLayout;
+                return [SiteLayout, AuthLayout];
             case name.startsWith('settings/'):
                 return [AppLayout, SettingsLayout];
             default:

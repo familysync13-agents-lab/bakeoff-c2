@@ -1,16 +1,17 @@
-import AppLayoutTemplate from '@/layouts/app/app-sidebar-layout';
+import SiteLayout from '@/layouts/site-layout';
 import type { BreadcrumbItem } from '@/types';
 
 export default function AppLayout({
-    breadcrumbs = [],
     children,
 }: {
     breadcrumbs?: BreadcrumbItem[];
     children: React.ReactNode;
 }) {
     return (
-        <AppLayoutTemplate breadcrumbs={breadcrumbs}>
-            {children}
-        </AppLayoutTemplate>
+        <SiteLayout>
+            <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-6 sm:px-6 lg:px-8">
+                {children}
+            </div>
+        </SiteLayout>
     );
 }
