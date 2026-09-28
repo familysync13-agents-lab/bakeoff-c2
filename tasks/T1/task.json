@@ -65,5 +65,20 @@
   }
  },
  "oracle_timeout_s": 900,
- "amendments": []
+ "amendments": [
+  {
+   "id": "A1",
+   "at": "2026-09-28T23:27:16Z",
+   "kind": "visual-baseline",
+   "reason": "T1 AC1 is an experience criterion: the owner's approval of this PR is the experience judgment and locks the baselines. *.json = gate fingerprints captured by the gate in CI (check run 109180408155, PR #2 head 8cdedb3f); *.png = screenshots of the same build from the local preview, for viewing only (not enforced).",
+   "files": {
+    "baselines/T1/landing-375.json": "ef1788a8da277ca9a6a5fd31d96e783b1e2e6023f784b5d2819bc2480e49288b",
+    "baselines/T1/landing-768.json": "d88a34d6a6ac2bc022ced70535bcc126b1f7295112e63eaa69de0e3b90711cf1",
+    "baselines/T1/landing-1280.json": "abf5095221f375bfd2272d9d0be319781cf63d8e13b293d13b6ae8b4819fdd51",
+    "baselines/T1/landing-375.png": "90bf11b6209282ab9a241cf59803659531b2194824c794e032f4b2d79073da60",
+    "baselines/T1/landing-768.png": "7d71b02f1c030cbcdb455b3597e1249d6777a607a8b1ed6905aa52295d27d7a3",
+    "baselines/T1/landing-1280.png": "740723f42494d4b7d677c6f2e2361852423e7a3214a733c124e08cdb767220e2"
+   }
+  }
+ ]
 }
