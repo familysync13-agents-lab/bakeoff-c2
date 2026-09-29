@@ -2,6 +2,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import { ArrowLeft, Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import BookSearch from '@/components/book-search';
+import ShareLinkForm from '@/components/share-link-form';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { destroy, edit, index } from '@/routes/lists';
@@ -90,6 +91,10 @@ export default function ListsShow({ list, books }: Props) {
             </section>
             <div className="mt-8">
                 <BookSearch listId={list.id} />
+            </div>
+
+            <div className="mt-10 border-t border-border pt-8">
+                <ShareLinkForm listId={list.id} />
             </div>
         </>
     );

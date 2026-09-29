@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\ReadingListController;
+use App\Http\Controllers\ShareLinkController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'welcome')->name('home');
@@ -24,6 +25,11 @@ Route::whereNumber('list')->group(function () {
 
     Route::get('lists/{list}/books/search', [BookController::class, 'search'])->name('lists.books.search');
     Route::post('lists/{list}/books', [BookController::class, 'store'])->name('lists.books.store');
+
+    Route::post('lists/{list}/share-links', [ShareLinkController::class, 'store'])->name('lists.share-links.store');
 });
+
+// Read-only share links (anyone, no sign-in): see App\Services\ShareLinks.
+Route::get('s/{token}', [ShareLinkController::class, 'show'])->name('share.show');
 
 require __DIR__.'/settings.php';

@@ -38,6 +38,11 @@ return [
         'dsn' => env('PUBLIC_SENTRY_DSN'),
     ],
 
+    // Share-link signing key (HMAC-SHA256). Server-side secret: never render it or share it with the browser.
+    'share_links' => [
+        'key' => env('V0_SECRET_CANARY'),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

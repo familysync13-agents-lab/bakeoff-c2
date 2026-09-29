@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\ShareLinks;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +16,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(ShareLinks::class, fn (): ShareLinks => new ShareLinks(
+            (string) config('services.share_links.key'),
+        ));
     }
 
     /**

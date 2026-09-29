@@ -29,6 +29,12 @@ Candidate 2: Laravel + Inertia + React. Built by the Builder agent; every change
 - `BookController`: `GET /lists/{id}/books/search?q=` (JSON, owner only; 503 `{"message":"Book search is unavailable"}` on failure) and `POST /lists/{id}/books` (owner only, 404 for everyone else, checked before validation). Books are unique per list by Open Library work key (or a hash of title/authors/year when the key is missing).
 - UI: `resources/js/components/book-search.tsx` on the list page; added books are listed under "Books".
 
+## Share links (T4)
+
+- `App\Services\ShareLinks`: token `{list id}.{expiry, Unix s}.{HMAC-SHA256 hex}`, signed with `V0_SECRET_CANARY` (`config/services.php` `share_links.key`, server-side only) over `share-link:v1:{list id}.{expiry}`; parsed strictly (canonical digits, lowercase hex, constant-time compare), so any edited, truncated or extended token is rejected. Stateless: no revocation (non-goal).
+- `ShareLinkController`: `POST /lists/{id}/share-links` (`expires_in` = `1m` | `1d` | `7d`; owner only, 404 otherwise) flashes `{APP_URL}/s/{token}`; `GET /s/{token}` (anyone) renders `share/show` read-only (name, books: title and author) with `Cache-Control: no-store` and `Referrer-Policy: no-referrer`. Invalid token or deleted list -> 404, expired -> 410.
+- UI: `resources/js/components/share-link-form.tsx` on the owner's list page.
+
 ## Local development
 
 ```sh

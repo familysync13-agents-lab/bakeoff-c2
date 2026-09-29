@@ -43,10 +43,10 @@ return Application::configure(basePath: dirname(__DIR__))
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
 
-        // Render "forbidden" and "not found" inside the app shell.
+        // Render "forbidden", "not found" and "gone" (expired share links) inside the app shell.
         $exceptions->respond(function (SymfonyResponse $response, Throwable $e, Request $request) {
             $status = $response->getStatusCode();
-            if (! in_array($status, [403, 404], true) || $request->expectsJson()) {
+            if (! in_array($status, [403, 404, 410], true) || $request->expectsJson()) {
                 return $response;
             }
 
