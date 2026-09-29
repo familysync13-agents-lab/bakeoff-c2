@@ -10,6 +10,10 @@ const messages: Record<number, { title: string; body: string }> = {
         title: 'Page not found',
         body: 'This page does not exist or is not available to you.',
     },
+    410: {
+        title: 'Link expired',
+        body: 'This share link has expired. Ask the list owner for a new one.',
+    },
 };
 
 export default function ErrorPage({ status }: { status: number }) {
