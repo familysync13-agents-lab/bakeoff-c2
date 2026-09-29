@@ -16,10 +16,11 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property int $user_id
  * @property string $name
+ * @property string|null $description
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name'])]
+#[Fillable(['name', 'description'])]
 class ReadingList extends Model
 {
     /** @use HasFactory<ReadingListFactory> */

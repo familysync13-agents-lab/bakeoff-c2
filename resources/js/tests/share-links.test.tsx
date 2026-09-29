@@ -60,7 +60,10 @@ describe('shared list page (anyone)', () => {
 
     it('shows the list name and all its books without any editing controls', () => {
         const html = renderToStaticMarkup(
-            <SharedList list={{ name: 'Sci-fi Classics' }} books={books} />,
+            <SharedList
+                list={{ name: 'Sci-fi Classics', description: null }}
+                books={books}
+            />,
         );
         expect(html).toMatch(/<h1[^>]*>Sci-fi Classics<\/h1>/);
         const items = html.match(/<li[\s\S]*?<\/li>/g) ?? [];
@@ -85,7 +88,10 @@ describe('shared list page (anyone)', () => {
 
     it('renders the "Books" section exactly like the owner\'s list page', () => {
         const html = renderToStaticMarkup(
-            <SharedList list={{ name: 'Sci-fi Classics' }} books={books} />,
+            <SharedList
+                list={{ name: 'Sci-fi Classics', description: null }}
+                books={books}
+            />,
         );
         expect(html).toContain(
             renderToStaticMarkup(<BookList books={books} />),

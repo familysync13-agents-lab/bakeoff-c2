@@ -1,5 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
-import ListNameForm from '@/components/list-name-form';
+import ListForm from '@/components/list-form';
 import { Button } from '@/components/ui/button';
 import { index, store } from '@/routes/lists';
 
@@ -10,7 +10,7 @@ export default function ListsCreate() {
             <h1 className="mb-6 text-2xl font-semibold tracking-tight sm:text-3xl">
                 New list
             </h1>
-            <ListNameForm
+            <ListForm
                 target={store.form()}
                 submitLabel="Create list"
                 cancel={

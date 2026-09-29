@@ -88,7 +88,7 @@ describe('viewing', function () {
             ->assertHeader('Referrer-Policy', 'no-referrer')
             ->assertInertia(fn (Assert $page) => $page
                 ->component('share/show')
-                ->where('list', ['name' => 'Sci-fi Classics'])
+                ->where('list', ['name' => 'Sci-fi Classics', 'description' => null])
                 ->has('books', 1)
                 ->where('books.0.title', 'Dune')
                 ->where('books.0.authors', 'Frank Herbert')
