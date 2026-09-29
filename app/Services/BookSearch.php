@@ -84,8 +84,8 @@ class BookSearch
 
         return [
             'key' => is_string($key) && $key !== '' ? mb_substr($key, 0, 200) : null,
-            'title' => is_string($title) && trim($title) !== '' ? mb_substr(trim($title), 0, 500) : 'Untitled',
-            'authors' => array_slice($authors, 0, 10),
+            'title' => $authors !== [] ? implode(', ', array_slice($authors, 0, 10)) : 'Untitled',
+            'authors' => is_string($title) && trim($title) !== '' ? [mb_substr(trim($title), 0, 500)] : [],
             'year' => is_int($year) ? $year : null,
         ];
     }
