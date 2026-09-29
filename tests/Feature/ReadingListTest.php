@@ -107,6 +107,12 @@ describe('signed-in owner', function () {
         $this->get("/lists/{$list->id}")->assertNotFound();
         $this->get("/lists/{$list->id}/edit")->assertNotFound();
         $this->actingAs($this->bob)->get("/lists/{$list->id}")->assertNotFound();
+
+        // ... and for guests (tasks/T2/contract.json AC7), not a redirect to /login.
+        auth()->logout();
+        $this->assertGuest();
+        $this->get("/lists/{$list->id}")->assertNotFound();
+        $this->get("/lists/{$list->id}/edit")->assertNotFound();
     });
 
     it('renders not-found pages inside the app shell', function () {
@@ -145,20 +151,29 @@ describe('another signed-in user', function () {
 });
 
 describe('anonymous visitor', function () {
-    it('is sent to /login for every list page', function (string $path) {
-        $list = ReadingList::factory()->for($this->alice)->create(['name' => 'Alice secret']);
+    it('is sent to /login for the index and the new-list form', function (string $path) {
+        $this->get($path)->assertRedirect('/login');
+    })->with(['/lists', '/lists/new']);
 
-        $this->get(str_replace('{id}', (string) $list->id, $path))
-            ->assertRedirect('/login')
-            ->assertDontSee('Alice secret');
-    })->with(['/lists', '/lists/new', '/lists/{id}', '/lists/{id}/edit']);
+    it('gets 404 for existing, deleted and unknown lists alike', function (string $path) {
+        $list = ReadingList::factory()->for($this->alice)->create(['name' => 'Alice secret']);
+        $gone = ReadingList::factory()->for($this->alice)->create();
+        $gone->delete();
+
+        foreach ([$list->id, $gone->id, 999999] as $id) {
+            $this->get(str_replace('{id}', (string) $id, $path))
+                ->assertNotFound()
+                ->assertDontSee('Alice secret');
+        }
+    })->with(['/lists/{id}', '/lists/{id}/edit']);
 
     it('cannot create, rename or delete lists', function () {
         $list = ReadingList::factory()->for($this->alice)->create(['name' => 'Alice secret']);
 
         $this->post('/lists', ['name' => 'Anonymous'])->assertRedirect('/login');
-        $this->patch("/lists/{$list->id}", ['name' => 'Hijacked'])->assertRedirect('/login');
-        $this->delete("/lists/{$list->id}")->assertRedirect('/login');
+        $this->patch("/lists/{$list->id}", ['name' => 'Hijacked'])->assertNotFound();
+        $this->patch("/lists/{$list->id}", ['name' => ''])->assertNotFound();
+        $this->delete("/lists/{$list->id}")->assertNotFound();
 
         expect(ReadingList::query()->count())->toBe(1)
             ->and($list->fresh()?->name)->toBe('Alice secret');
