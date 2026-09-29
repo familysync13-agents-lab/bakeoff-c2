@@ -14,7 +14,7 @@ class ShareLinks
 {
     /** Offered expiry periods: form value => seconds. */
     public const array EXPIRIES = [
-        '1m' => 60,
+        '1m' => 60 * 60,
         '1d' => 86_400,
         '7d' => 604_800,
     ];
