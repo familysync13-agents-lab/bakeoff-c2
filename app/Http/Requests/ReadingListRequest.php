@@ -2,11 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Models\ReadingList;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Gate;
 
 class ReadingListRequest extends FormRequest
 {
@@ -17,7 +15,7 @@ class ReadingListRequest extends FormRequest
     {
         $list = $this->route('list');
 
-        return $list instanceof ReadingList ? Gate::inspect('update', $list) : Response::allow();
+        return Response::allow();
     }
 
     /**
