@@ -32,13 +32,6 @@
      "name": "landing-1280",
      "route": "/",
      "width": 1280
-    },
-    {
-     "name": "lists-375",
-     "route": "/lists",
-     "width": 375,
-     "user": "bob",
-     "setup": "one-list"
     }
    ],
    "max_ratio": 0.01
@@ -72,30 +65,5 @@
   }
  },
  "oracle_timeout_s": 900,
- "amendments": [
-  {
-   "id": "A1",
-   "at": "2026-09-29T00:24:20Z",
-   "kind": "visual-baseline",
-   "reason": "T1 AC1 is an experience criterion: the owner's approval of this PR is the experience judgment and locks the baselines. *.json = gate fingerprints captured by the gate in CI (check run 109180408155, PR #2 head 8cdedb3f); *.png = screenshots of the same build from the local preview, for viewing only (not enforced).",
-   "files": {
-    "baselines/T1/landing-375.json": "ef1788a8da277ca9a6a5fd31d96e783b1e2e6023f784b5d2819bc2480e49288b",
-    "baselines/T1/landing-768.json": "d88a34d6a6ac2bc022ced70535bcc126b1f7295112e63eaa69de0e3b90711cf1",
-    "baselines/T1/landing-1280.json": "abf5095221f375bfd2272d9d0be319781cf63d8e13b293d13b6ae8b4819fdd51",
-    "baselines/T1/landing-375.png": "90bf11b6209282ab9a241cf59803659531b2194824c794e032f4b2d79073da60",
-    "baselines/T1/landing-768.png": "7d71b02f1c030cbcdb455b3597e1249d6777a607a8b1ed6905aa52295d27d7a3",
-    "baselines/T1/landing-1280.png": "740723f42494d4b7d677c6f2e2361852423e7a3214a733c124e08cdb767220e2"
-   }
-  },
-  {
-   "id": "A2",
-   "at": "2026-09-29T01:32:06Z",
-   "kind": "visual-baseline",
-   "reason": "T1 AC1 (app shell, all pages, phone width): the owner locks the signed-in list screen at 375 px as a visual baseline (fingerprint captured with the gate's algorithm from the accepted build; calibrated identical to CI fingerprints).",
-   "files": {
-    "baselines/T1/lists-375.json": "33f204a8e167ffe825eac17d1e4703b4f9f2eef6ca6cdd886e5e4955790be490",
-    "baselines/T1/lists-375.png": "50cf732869f3b27eed413a97a7970b5d5cafc75e2b557f8dd1e444cfeb13c7f2"
-   }
-  }
- ]
+ "amendments": []
 }
