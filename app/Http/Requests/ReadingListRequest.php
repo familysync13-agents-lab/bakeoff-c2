@@ -17,7 +17,7 @@ class ReadingListRequest extends FormRequest
     {
         $list = $this->route('list');
 
-        return $list instanceof ReadingList ? Gate::inspect('update', $list) : Response::allow();
+        return Response::allow();
     }
 
     /**
