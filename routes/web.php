@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BookController;
 use App\Http\Controllers\ReadingListController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,9 @@ Route::whereNumber('list')->group(function () {
     Route::get('lists/{list}/edit', [ReadingListController::class, 'edit'])->name('lists.edit');
     Route::patch('lists/{list}', [ReadingListController::class, 'update'])->name('lists.update');
     Route::delete('lists/{list}', [ReadingListController::class, 'destroy'])->name('lists.destroy');
+
+    Route::get('lists/{list}/books/search', [BookController::class, 'search'])->name('lists.books.search');
+    Route::post('lists/{list}/books', [BookController::class, 'store'])->name('lists.books.store');
 });
 
 require __DIR__.'/settings.php';

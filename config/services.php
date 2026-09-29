@@ -28,6 +28,11 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    // Book-search API (Open Library /search.json format), called server-side only.
+    'book_api' => [
+        'base_url' => env('BOOK_API_BASE_URL'),
+    ],
+
     // Browser error monitoring (public values only: rendered into every page).
     'sentry_browser' => [
         'dsn' => env('PUBLIC_SENTRY_DSN'),

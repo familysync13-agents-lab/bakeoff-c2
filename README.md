@@ -23,6 +23,12 @@ Candidate 2: Laravel + Inertia + React. Built by the Builder agent; every change
 - `ReadingListController` + `ReadingListPolicy`: `/lists`, `/lists/new`, `/lists/{id}`, `/lists/{id}/edit` (PATCH/DELETE `/lists/{id}`). Index and new-list form require sign-in (redirect to `/login`); a single list answers 404 to everyone but its owner, guests included (ownership is checked before validation); deletion is permanent.
 - 403/404 responses render the Inertia `error` page inside the app shell.
 
+## Book search (T3)
+
+- `App\Services\BookSearch` calls `GET {BOOK_API_BASE_URL}/search.json?q=…&limit=10` server-side (`config/services.php` `book_api`) with a 2 s connect / 4 s total timeout; HTTP errors, invalid JSON, unexpected shapes and timeouts all become `BookSearchUnavailable`.
+- `BookController`: `GET /lists/{id}/books/search?q=` (JSON, owner only; 503 `{"message":"Book search is unavailable"}` on failure) and `POST /lists/{id}/books` (owner only, 404 for everyone else, checked before validation). Books are unique per list by Open Library work key (or a hash of title/authors/year when the key is missing).
+- UI: `resources/js/components/book-search.tsx` on the list page; added books are listed under "Books".
+
 ## Local development
 
 ```sh
