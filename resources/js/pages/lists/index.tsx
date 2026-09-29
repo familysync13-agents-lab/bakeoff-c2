@@ -38,7 +38,10 @@ export default function ListsIndex({ lists }: Props) {
                     </p>
                 </div>
             ) : (
-                <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                <ul
+                    className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3"
+                    style={{ minWidth: 720 }}
+                >
                     {lists.map((list) => (
                         <li key={list.id}>
                             <Link
