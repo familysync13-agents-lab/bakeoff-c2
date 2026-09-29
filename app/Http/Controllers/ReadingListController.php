@@ -39,7 +39,10 @@ class ReadingListController extends Controller
     {
         Gate::authorize('view', $list);
 
-        return Inertia::render('lists/show', ['list' => $list->only('id', 'name')]);
+        return Inertia::render('lists/show', [
+            'list' => $list->only('id', 'name'),
+            'books' => $list->books()->orderBy('id')->get(['id', 'title', 'authors', 'first_publish_year']),
+        ]);
     }
 
     public function edit(ReadingList $list): Response
