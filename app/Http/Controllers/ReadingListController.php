@@ -40,7 +40,7 @@ class ReadingListController extends Controller
         Gate::authorize('view', $list);
 
         return Inertia::render('lists/show', [
-            'list' => $list->only('id', 'name'),
+            'list' => $list->only('id', 'name', 'description'),
             'books' => $list->books()->orderBy('id')->get(['id', 'title', 'authors', 'first_publish_year']),
         ]);
     }
@@ -49,7 +49,7 @@ class ReadingListController extends Controller
     {
         Gate::authorize('update', $list);
 
-        return Inertia::render('lists/edit', ['list' => $list->only('id', 'name')]);
+        return Inertia::render('lists/edit', ['list' => $list->only('id', 'name', 'description')]);
     }
 
     public function update(ReadingListRequest $request, ReadingList $list): RedirectResponse

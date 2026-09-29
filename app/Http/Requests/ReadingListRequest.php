@@ -21,6 +21,17 @@ class ReadingListRequest extends FormRequest
     }
 
     /**
+     * Browsers submit textarea line breaks as CRLF; store (and count) each as a single character.
+     */
+    protected function prepareForValidation(): void
+    {
+        $description = $this->input('description');
+        if (is_string($description)) {
+            $this->merge(['description' => str_replace("\r\n", "\n", $description)]);
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, array<int, ValidationRule|string>>
@@ -29,6 +40,8 @@ class ReadingListRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:100'],
+            // Optional: blank input arrives as null (ConvertEmptyStringsToNull), which also clears it on edit.
+            'description' => ['nullable', 'string', 'max:500'],
         ];
     }
 }

@@ -4,13 +4,14 @@ import { useState } from 'react';
 import BookList from '@/components/book-list';
 import type { ListBook } from '@/components/book-list';
 import BookSearch from '@/components/book-search';
+import ListDescription from '@/components/list-description';
 import ShareLinkForm from '@/components/share-link-form';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { destroy, edit, index } from '@/routes/lists';
 
 type Props = {
-    list: { id: number; name: string };
+    list: { id: number; name: string; description: string | null };
     books: ListBook[];
 };
 
@@ -28,9 +29,12 @@ export default function ListsShow({ list, books }: Props) {
                 My lists
             </Link>
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                <h1 className="min-w-0 text-2xl font-semibold tracking-tight break-words sm:text-3xl">
-                    {list.name}
-                </h1>
+                <div className="min-w-0">
+                    <h1 className="text-2xl font-semibold tracking-tight break-words sm:text-3xl">
+                        {list.name}
+                    </h1>
+                    <ListDescription description={list.description} />
+                </div>
                 <div className="flex shrink-0 flex-wrap gap-2">
                     <Button asChild variant="outline">
                         <Link href={edit(list.id)}>

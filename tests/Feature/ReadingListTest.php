@@ -47,7 +47,7 @@ describe('signed-in owner', function () {
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->component('lists/show')
-                ->where('list', ['id' => $list->id, 'name' => 'Summer reading']));
+                ->where('list', ['id' => $list->id, 'name' => 'Summer reading', 'description' => null]));
     });
 
     it('accepts names of 1 and exactly 100 characters', function (string $name) {

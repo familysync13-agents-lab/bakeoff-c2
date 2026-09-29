@@ -1,9 +1,10 @@
 import { Head } from '@inertiajs/react';
 import BookList from '@/components/book-list';
 import type { ListBook } from '@/components/book-list';
+import ListDescription from '@/components/list-description';
 
 type Props = {
-    list: { name: string };
+    list: { name: string; description: string | null };
     books: ListBook[];
 };
 
@@ -21,6 +22,7 @@ export default function SharedList({ list, books }: Props) {
             <h1 className="min-w-0 text-2xl font-semibold tracking-tight break-words sm:text-3xl">
                 {list.name}
             </h1>
+            <ListDescription description={list.description} />
 
             <BookList books={books} />
         </>

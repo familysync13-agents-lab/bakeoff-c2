@@ -45,7 +45,7 @@ class ShareLinkController extends Controller
         abort_if($list === null, 404);
 
         $response = Inertia::render('share/show', [
-            'list' => $list->only('name'),
+            'list' => $list->only('name', 'description'),
             'books' => $list->books()->orderBy('id')->get(['id', 'title', 'authors', 'first_publish_year']),
         ])->toResponse($request);
         $response->headers->add([
