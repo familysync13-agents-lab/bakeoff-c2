@@ -91,7 +91,8 @@ describe('viewing', function () {
                 ->where('list', ['name' => 'Sci-fi Classics'])
                 ->has('books', 1)
                 ->where('books.0.title', 'Dune')
-                ->where('books.0.authors', 'Frank Herbert'));
+                ->where('books.0.authors', 'Frank Herbert')
+                ->where('books.0.first_publish_year', 1965));
     });
 
     it('rejects every single-character change, truncation and extension of the token (AC2)', function () {

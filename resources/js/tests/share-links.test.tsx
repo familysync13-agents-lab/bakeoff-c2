@@ -1,6 +1,7 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import ShareLinkForm, { ShareLinkField } from '@/components/share-link-form';
+import BookList from '@/components/book-list';
 import SharedList from '@/pages/share/show';
 
 vi.mock('@inertiajs/react', () => ({
@@ -41,16 +42,35 @@ describe('share link form (owner)', () => {
 });
 
 describe('shared list page (anyone)', () => {
-    it('shows the list name and its books without any editing controls', () => {
+    const books = [
+        {
+            id: 1,
+            title: 'Dune',
+            authors: 'Frank Herbert',
+            first_publish_year: 1965,
+        },
+        {
+            id: 2,
+            title: 'Dune: House Atreides',
+            authors: 'Brian Herbert, Kevin J. Anderson',
+            first_publish_year: 1999,
+        },
+        { id: 3, title: 'Untitled', authors: '', first_publish_year: null },
+    ];
+
+    it('shows the list name and all its books without any editing controls', () => {
         const html = renderToStaticMarkup(
-            <SharedList
-                list={{ name: 'Sci-fi Classics' }}
-                books={[{ id: 1, title: 'Dune', authors: 'Frank Herbert' }]}
-            />,
+            <SharedList list={{ name: 'Sci-fi Classics' }} books={books} />,
         );
         expect(html).toMatch(/<h1[^>]*>Sci-fi Classics<\/h1>/);
-        expect(html).toContain('Dune');
-        expect(html).toContain('Frank Herbert');
+        const items = html.match(/<li[\s\S]*?<\/li>/g) ?? [];
+        expect(items).toHaveLength(3);
+        expect(items[0]).toContain('Dune</p>');
+        expect((items[0] ?? '').replace(/<[^>]*>/g, '')).toContain(
+            'Frank Herbert · 1965',
+        );
+        expect(items[1]).toContain('Brian Herbert, Kevin J. Anderson');
+        expect(items[2]).toContain('Unknown author');
         expect(html).not.toMatch(/<(button|form|input|select|a)\b/);
         for (const label of [
             'Edit',
@@ -61,5 +81,14 @@ describe('shared list page (anyone)', () => {
         ]) {
             expect(html).not.toContain(`>${label}<`);
         }
+    });
+
+    it('renders the "Books" section exactly like the owner\'s list page', () => {
+        const html = renderToStaticMarkup(
+            <SharedList list={{ name: 'Sci-fi Classics' }} books={books} />,
+        );
+        expect(html).toContain(
+            renderToStaticMarkup(<BookList books={books} />),
+        );
     });
 });

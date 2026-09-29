@@ -46,7 +46,7 @@ class ShareLinkController extends Controller
 
         $response = Inertia::render('share/show', [
             'list' => $list->only('name'),
-            'books' => $list->books()->orderBy('id')->get(['id', 'title', 'authors']),
+            'books' => $list->books()->orderBy('id')->get(['id', 'title', 'authors', 'first_publish_year']),
         ])->toResponse($request);
         $response->headers->add([
             // Never serve a shared list from a cache once the link has expired, and keep the token out of referrers.
