@@ -1,0 +1,26 @@
+<?php
+
+namespace Tests;
+
+use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Laravel\Fortify\Features;
+
+abstract class TestCase extends BaseTestCase
+{
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // APP_SECRET is provided by the check stage; generate a throwaway key for local runs without it.
+        if (! config('app.key')) {
+            config(['app.key' => 'base64:'.base64_encode(random_bytes(32))]);
+        }
+    }
+
+    protected function skipUnlessFortifyHas(string $feature, ?string $message = null): void
+    {
+        if (! Features::enabled($feature)) {
+            $this->markTestSkipped($message ?? "Fortify feature [{$feature}] is not enabled.");
+        }
+    }
+}
