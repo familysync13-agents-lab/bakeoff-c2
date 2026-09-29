@@ -2,10 +2,8 @@
 
 namespace App\Services;
 
-use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use JsonException;
 
 /**
  * Client for the public book-search API (Open Library /search.json format).
@@ -29,24 +27,10 @@ class BookSearch
             throw new BookSearchUnavailable('BOOK_API_BASE_URL is not configured');
         }
 
-        try {
-            $response = Http::connectTimeout(2)
-                ->timeout(self::TIMEOUT_SECONDS)
-                ->acceptJson()
-                ->get(rtrim($baseUrl, '/').'/search.json', ['q' => $query, 'limit' => self::LIMIT]);
-        } catch (ConnectionException $e) {
-            return $this->fail('request failed: '.$e->getMessage());
-        }
-
-        if (! $response->successful()) {
-            return $this->fail('HTTP '.$response->status());
-        }
-
-        try {
-            $data = json_decode($response->body(), true, 32, JSON_THROW_ON_ERROR);
-        } catch (JsonException) {
-            return $this->fail('invalid JSON');
-        }
+        $data = Http::acceptJson()
+            ->get(rtrim($baseUrl, '/').'/search.json', ['q' => $query, 'limit' => self::LIMIT])
+            ->throw()
+            ->json();
 
         if (! is_array($data) || ! isset($data['docs']) || ! is_array($data['docs']) || ! array_is_list($data['docs'])) {
             return $this->fail('unexpected response shape');
