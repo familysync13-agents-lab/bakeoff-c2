@@ -1,5 +1,7 @@
 <?php
 
+use App\Support\SentryScrubber;
+
 /**
  * Sentry Laravel SDK configuration file.
  *
@@ -52,6 +54,9 @@ return [
 
     // @see: https://docs.sentry.io/platforms/php/guides/laravel/configuration/options/#send_default_pii
     'send_default_pii' => env('SENTRY_SEND_DEFAULT_PII', false),
+
+    // Removes server-side secrets (V0_SECRET_CANARY) from error events; a static callable so `config:cache` still works.
+    'before_send' => [SentryScrubber::class, 'beforeSend'],
 
     // @see: https://docs.sentry.io/platforms/php/guides/laravel/configuration/options/#ignore_exceptions
     // 'ignore_exceptions' => [],

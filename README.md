@@ -44,3 +44,9 @@ composer dev
 # checks; tests use DATABASE_URL (RefreshDatabase wipes it: point it at a test database) or in-memory SQLite when unset
 DATABASE_URL=$TEST_DATABASE_URL composer ci:check
 ```
+
+## Error monitoring (T5)
+
+- `DebugController` (404 when `APP_ENV` is `production`): `GET /debug/server-error` throws an unhandled `RuntimeException` (HTTP 500, reported by `sentry/sentry-laravel` via `Integration::handles`); `GET /debug/client-error` renders `debug/client-error` whose "Trigger client error" button throws an unhandled error, reported by `@sentry/react`'s global handlers.
+- Both SDKs send `release` = `APP_RELEASE` and `environment` = `APP_ENV`.
+- Secrets stay out of events: `App\Support\SentryScrubber` (`before_send`) replaces the share-link key (`V0_SECRET_CANARY`) in every event string with `[Filtered]`; `zend.exception_ignore_args` keeps function arguments out of stack traces; `send_default_pii` is off.

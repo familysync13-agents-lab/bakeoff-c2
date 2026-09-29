@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\DebugController;
 use App\Http\Controllers\ReadingListController;
 use App\Http\Controllers\ShareLinkController;
 use Illuminate\Support\Facades\Route;
@@ -31,5 +32,9 @@ Route::whereNumber('list')->group(function () {
 
 // Read-only share links (anyone, no sign-in): see App\Services\ShareLinks.
 Route::get('s/{token}', [ShareLinkController::class, 'show'])->name('share.show');
+
+// Forced errors for checking error monitoring (T5): 404 when APP_ENV is "production" (see DebugController).
+Route::get('debug/server-error', [DebugController::class, 'serverError'])->name('debug.server-error');
+Route::get('debug/client-error', [DebugController::class, 'clientError'])->name('debug.client-error');
 
 require __DIR__.'/settings.php';
