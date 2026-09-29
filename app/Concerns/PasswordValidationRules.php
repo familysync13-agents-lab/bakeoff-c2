@@ -18,6 +18,16 @@ trait PasswordValidationRules
     }
 
     /**
+     * Get the validation rules for the password chosen at sign-up (a single field, no confirmation).
+     *
+     * @return array<int, Password|ValidationRule|array<mixed>|string>
+     */
+    protected function newPasswordRules(): array
+    {
+        return ['required', 'string', Password::default()];
+    }
+
+    /**
      * Get the validation rules used to validate the current password.
      *
      * @return array<int, Password|ValidationRule|array<mixed>|string>

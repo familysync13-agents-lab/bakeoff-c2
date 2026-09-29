@@ -8,8 +8,11 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 use Sentry\Laravel\Integration;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -29,6 +32,9 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
         ]);
+
+        // Share the Inertia props (signed-in user) before route-model binding, so its 404s render the signed-in shell.
+        $middleware->prependToPriorityList(before: SubstituteBindings::class, prepend: HandleInertiaRequests::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         Integration::handles($exceptions);
@@ -36,4 +42,16 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+
+        // Render "forbidden" and "not found" inside the app shell.
+        $exceptions->respond(function (SymfonyResponse $response, Throwable $e, Request $request) {
+            $status = $response->getStatusCode();
+            if (! in_array($status, [403, 404], true) || $request->expectsJson()) {
+                return $response;
+            }
+
+            return Inertia::render('error', ['status' => $status])
+                ->toResponse($request)
+                ->setStatusCode($status);
+        });
     })->create();

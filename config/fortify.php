@@ -73,7 +73,7 @@ return [
     |
     */
 
-    'home' => '/dashboard',
+    'home' => '/lists',
 
     /*
     |--------------------------------------------------------------------------
@@ -87,6 +87,11 @@ return [
     */
 
     'prefix' => '',
+
+    // Sign-up lives at /signup (tasks/T2/contract.json); the route names stay Fortify's.
+    'paths' => [
+        'register' => '/signup',
+    ],
 
     'domain' => null,
 
@@ -114,8 +119,10 @@ return [
     |
     */
 
+    // No route limiter for login: Fortify then throttles *failed* attempts only (5 per minute per email + IP,
+    // Laravel\Fortify\LoginRateLimiter), so successful sign-ins are never locked out.
     'limiters' => [
-        'login' => 'login',
+        'login' => null,
     ],
 
     /*

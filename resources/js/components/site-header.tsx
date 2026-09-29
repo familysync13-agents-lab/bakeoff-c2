@@ -1,22 +1,18 @@
-import { Link, usePage } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
+import { LogOut, Settings } from 'lucide-react';
 import AppLogoIcon from '@/components/app-logo-icon';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { UserMenuContent } from '@/components/user-menu-content';
-import { useInitials } from '@/hooks/use-initials';
 import { PRODUCT_NAME, SIGN_IN_URL, SIGN_UP_URL } from '@/lib/site';
-import { dashboard } from '@/routes';
+import { logout } from '@/routes';
+import { index as lists } from '@/routes/lists';
+import { edit as settings } from '@/routes/profile';
+import type { Auth } from '@/types';
 
 /** App shell header: product name (home link) and the primary navigation. */
 export function SiteHeader() {
+    // Error pages rendered outside the web middleware carry no shared props.
     const { auth } = usePage().props;
-    const getInitials = useInitials();
-    const user = auth.user as typeof auth.user | null;
+    const user = (auth as Partial<Auth> | undefined)?.user ?? null;
 
     return (
         <header className="sticky top-0 z-40 border-b border-border/70 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/75">
@@ -35,38 +31,54 @@ export function SiteHeader() {
 
                 <nav aria-label="Primary" className="shrink-0">
                     {user ? (
-                        <ul className="flex items-center gap-1 sm:gap-2">
+                        <ul className="flex items-center gap-0.5 sm:gap-2">
                             <li>
-                                <Button asChild variant="ghost" size="sm">
-                                    <Link href={dashboard()}>Dashboard</Link>
+                                <Button
+                                    asChild
+                                    variant="ghost"
+                                    size="sm"
+                                    className="px-2 sm:px-3"
+                                >
+                                    <Link href={lists()}>My lists</Link>
                                 </Button>
                             </li>
                             <li>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button
-                                            variant="ghost"
-                                            className="size-10 rounded-full p-1"
-                                            aria-label="Account menu"
-                                        >
-                                            <Avatar className="size-8 overflow-hidden rounded-full">
-                                                <AvatarImage
-                                                    src={user.avatar}
-                                                    alt=""
-                                                />
-                                                <AvatarFallback className="rounded-full bg-stone-200 text-stone-900 dark:bg-stone-700 dark:text-white">
-                                                    {getInitials(user.name)}
-                                                </AvatarFallback>
-                                            </Avatar>
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent
-                                        className="w-56"
-                                        align="end"
+                                <Button
+                                    asChild
+                                    variant="ghost"
+                                    size="icon"
+                                    className="size-8"
+                                >
+                                    <Link
+                                        href={settings()}
+                                        aria-label="Account settings"
                                     >
-                                        <UserMenuContent user={user} />
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+                                        <Settings aria-hidden="true" />
+                                    </Link>
+                                </Button>
+                            </li>
+                            <li>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="px-2 sm:px-3"
+                                    onClick={() =>
+                                        router.post(
+                                            logout.url(),
+                                            {},
+                                            {
+                                                onSuccess: () =>
+                                                    router.flushAll(),
+                                            },
+                                        )
+                                    }
+                                >
+                                    <LogOut
+                                        aria-hidden="true"
+                                        className="hidden sm:block"
+                                    />
+                                    Sign out
+                                </Button>
                             </li>
                         </ul>
                     ) : (
