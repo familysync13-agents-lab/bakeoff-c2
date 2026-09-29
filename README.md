@@ -17,6 +17,12 @@ Candidate 2: Laravel + Inertia + React. Built by the Builder agent; every change
 - `GET /healthz` -> `{"status":"ok","env":<APP_ENV>,"users":<count>}`.
 - Environment mapping: `APP_SECRET` -> app key, `DATABASE_URL` -> `pgsql` connection, `APP_RELEASE` -> Sentry release.
 
+## Accounts and reading lists (T2)
+
+- Fortify: sign-up at `/signup` (name, email, password >= 8 characters, no confirmation field), sign-in at `/login`, sign-out `POST /logout` -> `/`; home is `/lists`. Failed sign-ins are throttled (5 per minute per email + IP); successful ones never are. Failure message: `lang/en/auth.php`.
+- `ReadingListController` + `ReadingListPolicy`: `/lists`, `/lists/new`, `/lists/{id}`, `/lists/{id}/edit` (PATCH/DELETE `/lists/{id}`). Index and new-list form require sign-in (redirect to `/login`); a single list answers 404 to everyone but its owner, guests included (ownership is checked before validation); deletion is permanent.
+- 403/404 responses render the Inertia `error` page inside the app shell.
+
 ## Local development
 
 ```sh

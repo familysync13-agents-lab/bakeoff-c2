@@ -4,7 +4,6 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\RateLimiter;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
@@ -13,32 +12,32 @@ class AuthenticationTest extends TestCase
 
     public function test_login_screen_can_be_rendered()
     {
-        $response = $this->get(route('login'));
+        $response = $this->get('/login');
 
         $response->assertOk();
     }
 
-    public function test_users_can_authenticate_using_the_login_screen()
+    public function test_users_can_authenticate_and_land_on_their_lists()
     {
         $user = User::factory()->create();
 
-        $response = $this->post(route('login.store'), [
+        $response = $this->post('/login', [
             'email' => $user->email,
             'password' => 'password',
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
+        $response->assertRedirect('/lists');
     }
 
-    public function test_users_can_not_authenticate_with_invalid_password()
+    public function test_a_wrong_password_is_reported_as_invalid()
     {
         $user = User::factory()->create();
 
-        $this->post(route('login.store'), [
+        $this->from('/login')->post('/login', [
             'email' => $user->email,
             'password' => 'wrong-password',
-        ]);
+        ])->assertRedirect('/login')->assertSessionHasErrors(['email' => 'Invalid email or password.']);
 
         $this->assertGuest();
     }
@@ -47,24 +46,34 @@ class AuthenticationTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->post(route('logout'));
+        $response = $this->actingAs($user)->post('/logout');
 
-        $response->assertRedirect(route('home'));
+        $response->assertRedirect('/');
 
         $this->assertGuest();
     }
 
-    public function test_users_are_rate_limited()
+    public function test_failed_attempts_are_rate_limited()
     {
         $user = User::factory()->create();
 
-        RateLimiter::increment(md5('login'.implode('|', [$user->email, '127.0.0.1'])), amount: 5);
+        for ($i = 0; $i < 5; $i++) {
+            $this->post('/login', ['email' => $user->email, 'password' => 'wrong-password']);
+        }
 
-        $response = $this->post(route('login.store'), [
-            'email' => $user->email,
-            'password' => 'wrong-password',
-        ]);
+        $this->post('/login', ['email' => $user->email, 'password' => 'password'])
+            ->assertSessionHasErrors('email');
 
-        $response->assertTooManyRequests();
+        $this->assertGuest();
+    }
+
+    public function test_successful_sign_ins_are_not_rate_limited()
+    {
+        $user = User::factory()->create();
+
+        for ($i = 0; $i < 10; $i++) {
+            $this->post('/login', ['email' => $user->email, 'password' => 'password'])->assertRedirect('/lists');
+            $this->post('/logout');
+        }
     }
 }
